@@ -17,5 +17,5 @@ Ejemplo 3
 """
 
 
-def sliding():
+def sliding(cadena):
     pass
