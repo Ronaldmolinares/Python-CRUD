@@ -1,23 +1,26 @@
-clients = [
-    {
-        "name": "Pablo",
-        "company": "Google",
-        "email": "pablo@google.com",
-        "position": "Software Engineer",
-    },
-    {
-        "name": "Ricardo",
-        "company": "Facebook",
-        "email": "ricardo@facebook.com",
-        "position": "Data Scientist",
-    },
-    {
-        "name": "Ana",
-        "company": "Amazon",
-        "email": "ana@amazon.com",
-        "position": "DevOps Engineer",
-    },
-]
+import csv
+import os
+
+CLIENT_TABLE = "./clients.csv"  # Tiene . al principio para que sea un archivo oculto
+CLIENT_SCHEMA = ["name", "company", "email", "position"]
+clients = []
+
+
+def _initialize_clients_from_storage():
+    with open(CLIENT_TABLE, "r") as f:
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)
+        for row in reader:
+            clients.append(row)
+
+
+def _save_clients_to_storage():
+    tmp_table_name = CLIENT_TABLE + ".tmp"
+    with open(tmp_table_name, "w") as f:
+        writer = csv.DictWriter(f, fieldnames=CLIENT_SCHEMA)
+        writer.writerows(clients)
+
+    os.remove(CLIENT_TABLE)
+    os.rename(tmp_table_name, CLIENT_TABLE)
 
 
 def create_client(client: dict):
@@ -26,9 +29,13 @@ def create_client(client: dict):
             print(f"Client {client['name']} already exists.")
             return
     clients.append(client)
+    _save_clients_to_storage()
 
 
 def list_clients():
+    if not clients:
+        print("No clients found.")
+        return
     print("UID | NAME | COMPANY | EMAIL | POSITION" + "\n" + "-" * 50)
     for idx, client in enumerate(clients, 1):
         print(
@@ -67,6 +74,7 @@ def delete_client(client_name):
     for idx, client in enumerate(clients):
         if client["name"] == client_name:
             clients.pop(idx)
+            _save_clients_to_storage()
             print(f"Client {client_name} deleted successfully.")
             return
     message_client_not_found(client_name)
@@ -100,12 +108,19 @@ def _get_client_field(field_name):
     while not field_value.strip():
         print(f"The client {field_name} cannot be empty")
         field_value = str(input(f"Client {field_name}: "))
-
+    if field_name == "email":
+        return field_value.lower()
     return field_value.title()
 
 
 def _get_client_field_or_default(field_name, current_value):
     field_value = input(f"Client {field_name} [{current_value}]: ").strip()
+
+    if field_name == "email":
+        if field_value:
+            return field_value.lower()
+        return current_value
+
     if field_value:
         return field_value.title()
     return current_value
@@ -119,6 +134,7 @@ def _get_client_field_or_default(field_name, current_value):
 
 
 if __name__ == "__main__":
+    _initialize_clients_from_storage()
     while True:
         _print_welcome()
         command = input()
@@ -161,3 +177,4 @@ if __name__ == "__main__":
 
             case _:
                 print("Invalid Option. Try again")
+    _save_clients_to_storage()

@@ -1,3 +1,6 @@
+import random
+
+
 def busqueda_binaria(lista, objetivo):
     bajo = 0
     alto = len(lista) - 1
@@ -16,12 +19,17 @@ def busqueda_binaria(lista, objetivo):
     return -1
 
 
-lista = [1, 3, 5, 7, 9, 11]
-objetivo = 12
+if __name__ == "__main__":
+    data = [random.randint(0, 100) for _ in range(20)]
+    print("Lista desordenada:", data)
+    data.sort()
+    print("Lista ordenada:", data)
 
-resultado = busqueda_binaria(lista, objetivo)
-print(
-    f"El elemento {objetivo} se encuentra en el índice: {resultado}"
-    if resultado != -1
-    else f"El elemento {objetivo} no se encuentra en la lista."
-)
+    objetivo = int(input("Ingrese el número a buscar: "))
+
+    resultado = busqueda_binaria(data, objetivo)
+    print(
+        f"El elemento {objetivo} se encuentra en el índice: {resultado}"
+        if resultado != -1
+        else f"El elemento {objetivo} no se encuentra en la lista."
+    )
