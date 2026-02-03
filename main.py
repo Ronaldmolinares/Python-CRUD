@@ -1,7 +1,9 @@
 import csv
 import os
 
-CLIENT_TABLE = "./clients.csv"  # Tiene . al principio para que sea un archivo oculto
+CLIENT_TABLE = (
+    "files./clients.csv"  # Tiene . al principio para que sea un archivo oculto
+)
 CLIENT_SCHEMA = ["name", "company", "email", "position"]
 clients = []
 
