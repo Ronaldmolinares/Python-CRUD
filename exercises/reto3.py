@@ -65,18 +65,18 @@ def StringChallenge(str):
         "y": "z",
         "z": "a",
     }
-    cadena = ""
+    resultado = []
     token = "hbs2oim9c1a"
     vocales = "aeiou"
 
     for c in str:
         if c in dic.keys():
-            if dic[c] in vocales:
-                cadena += dic[c].upper()
-            else:
-                cadena += dic[c]
+            nuevo = dic[c]
+            resultado.append(nuevo.upper() if nuevo in vocales else nuevo)
         else:
-            cadena += c
+            resultado.append(c)
+
+    cadena = "".join(resultado)
 
     resultado = zip_longest(cadena, token, fillvalue="")
 
