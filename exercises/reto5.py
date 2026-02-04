@@ -34,46 +34,24 @@ Input: "wwwbbbw"
 
 from itertools import zip_longest
 
-# def StringChallenge1(stri):
-#     if not stri.isalpha():
-#         raise ValueError(
-#             "The string will not contain any numbers, punctuation, or symbols."
-#         )
-
-#     token = "hbs2oim9c1a"
-#     dic = {}
-#     contador = 1
-
-#     for c in stri:
-#         if c not in dic:
-#             dic[c] = contador
-#         else:
-#             dic[c] += contador
-
-#     casteo = "".join(map(str, dic.values()))
-#     cadena = zip(casteo, dic.keys())
-#     valores = "".join(a + b for a, b in cadena)
-
-#     resultado = zip_longest(valores, token, fillvalue="")
-
-#     return "".join(a + b for a, b in resultado)
-
 
 def StringChallenge(stri):
     token = "hbs2oim9c1a"
     contador = 1
-    cadena = ""
+    cadena = []
 
     for c in range(1, len(stri)):
         if stri[c - 1] == stri[c]:
             contador += 1
         else:
-            cadena += str(contador) + stri[c - 1]
+            cadena.append(str(contador))
+            cadena.append(stri[c - 1])
             contador = 1
 
-    cadena += str(contador) + stri[c]
+    cadena.append(str(contador))
+    cadena.append(stri[c])
 
-    resultado = zip_longest(cadena, token, fillvalue="")
+    resultado = zip_longest("".join(cadena), token, fillvalue="")
     return "".join(a + b for a, b in resultado)
 
 
