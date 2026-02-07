@@ -78,5 +78,7 @@ def RecursionChallenge(num):
     return "".join(a + b for a, b in cadena)
 
 
-r2 = RecursionChallenge(8)
-print(r2)
+if __name__ == "__main__":
+
+    r2 = RecursionChallenge(8)
+    print(r2)
