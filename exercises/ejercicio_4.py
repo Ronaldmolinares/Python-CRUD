@@ -13,3 +13,7 @@ k = 4
 resultado → 12.75
 
 """
+
+
+def slidingWindow():
+    pass

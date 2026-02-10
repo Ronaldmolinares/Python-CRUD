@@ -50,29 +50,67 @@ def list(ctx):
 def update(ctx, uid):
     """Update an existing client identified by UID."""
     service = ClientService(ctx.obj["clients_table"])
-    
+
     # Verificar si el cliente existe primero
     existing_client = service.get_client_by_uid(uid)
     if not existing_client:
         click.echo(f"Error: Client with UID {uid} not found")
         return
-    
+
     # Si existe, pedir los nuevos datos
     click.echo(f"Updating client {uid}...")
     click.echo("Press Enter to keep current value or type new value:")
-    
-    name = click.prompt(f"Name [{existing_client.name}]", default=existing_client.name, show_default=False)
-    company = click.prompt(f"Company [{existing_client.company}]", default=existing_client.company, show_default=False)
-    email = click.prompt(f"Email [{existing_client.email}]", default=existing_client.email, show_default=False)
-    position = click.prompt(f"Position [{existing_client.position}]", default=existing_client.position, show_default=False)
-    
+
+    name = click.prompt(
+        f"Name [{existing_client.name}]",
+        default=existing_client.name,
+        show_default=False,
+    )
+    company = click.prompt(
+        f"Company [{existing_client.company}]",
+        default=existing_client.company,
+        show_default=False,
+    )
+    email = click.prompt(
+        f"Email [{existing_client.email}]",
+        default=existing_client.email,
+        show_default=False,
+    )
+    position = click.prompt(
+        f"Position [{existing_client.position}]",
+        default=existing_client.position,
+        show_default=False,
+    )
+
     updated_client = Client(name.title(), company.title(), email, position.title(), uid)
     service.update_client(updated_client)
     click.echo(f"Client {uid} updated successfully!")
 
 
 @clients.command()
+@click.option(
+    "-u",
+    "--uid",
+    "client_uid",
+    type=str,
+    prompt=True,
+    help="The client's UID to delete",
+)
 @click.pass_context
 def delete(ctx, client_uid):
-    """Delete a client identified by name."""
-    click.echo(f"Deleting client {client_uid}...")
+    """Delete a client identified by UID."""
+    service = ClientService(ctx.obj["clients_table"])
+
+    # Verificar si el cliente existe primero
+    existing_client = service.get_client_by_uid(client_uid)
+    if not existing_client:
+        click.echo(f"Error: Client with UID {client_uid} not found")
+        return
+
+    # Mostrar cliente a eliminar
+    click.echo(f"Client to delete: {existing_client.name} - {existing_client.company}")
+    if click.confirm("Are you sure you want to delete this client?"):
+        service.delete_client(client_uid)
+        click.echo(f"Client {client_uid} deleted successfully!")
+    else:
+        click.echo("Delete cancelled.")

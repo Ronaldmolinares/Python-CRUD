@@ -48,3 +48,15 @@ class ClientService:
                 else:
                     writer.writerow(client.to_dict())
         return found
+
+    def delete_client(self, uid):
+        clients = self.list_clients()
+        found = False
+        with open(self.table_name, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=Client.schema())
+            for client in clients:
+                if client.uid == uid:
+                    found = True
+                    continue  # Skip writing this client to effectively delete it
+                writer.writerow(client.to_dict())
+        return found
